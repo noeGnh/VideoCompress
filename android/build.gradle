@@ -22,8 +22,11 @@ rootProject.allprojects {
 }
 
 apply plugin: 'com.android.library'
+// AGP 9 compiles Kotlin itself ("built-in Kotlin") and fails if kotlin-android
+// is applied too -- unless the app turned built-in Kotlin off.
 def agpMajor = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0].toInteger()
-if (agpMajor < 9) {
+def builtInKotlin = agpMajor >= 9 && findProperty('android.builtInKotlin')?.toString() != 'false'
+if (!builtInKotlin) {
     apply plugin: 'kotlin-android'
 }
 
